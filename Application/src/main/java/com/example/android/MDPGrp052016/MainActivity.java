@@ -67,7 +67,19 @@ public class MainActivity extends SampleActivityBase {
     private ListView mConversationView;
     private EditText mOutEditText;
     private Button mSendButton;
-
+    private Button config_btnsave;
+    EditText et_explore;
+    EditText et_run;
+    EditText et_manual;
+    EditText et_refresh;
+    EditText et_forward;
+    EditText et_reverse;
+    EditText et_turn_left;
+    EditText et_turn_right;
+    EditText et_f1;
+    EditText et_f2;
+    EditText et_xcoor;
+    EditText et_ycoor;
     /**
      * Name of the connected device
      */
@@ -89,7 +101,9 @@ public class MainActivity extends SampleActivityBase {
     private BluetoothAdapter mBluetoothAdapter = null;
     private LayoutInflater inflater;
     private View dialogView;
+    private View dialogView_config;
     private AlertDialog alertDialog;
+    private AlertDialog alertDialog_config;
     /**
      * Member object for the chat services
      */
@@ -134,12 +148,148 @@ public class MainActivity extends SampleActivityBase {
             //BluetoothChatFragment fragment = new BluetoothChatFragment();
             //transaction.replace(R.id.sample_content_fragment, fragment);
             //transaction.commit();
+
+
+
+            Context context_config = this;
+            AlertDialog.Builder alertDialogBuilder_config = new AlertDialog.Builder(
+                    context_config);
+            inflater = this.getLayoutInflater();
+            dialogView_config = inflater.inflate(com.example.android.MDPGrp052016.R.layout.config, null);
+            // set title
+            alertDialogBuilder_config.setTitle("Config");
+
+
+            AlertDialog.Builder dialogBuilder_config = new AlertDialog.Builder(this);
+// ...Irrelevant code for customizing the buttons and title
+
+            dialogBuilder_config.setView(dialogView_config);
+
+
+
+            alertDialog_config = dialogBuilder_config.create();
+
         }
 
         mConversationView = (ListView) dialogView.findViewById(com.example.android.MDPGrp052016.R.id.in);
         mOutEditText = (EditText) dialogView.findViewById(com.example.android.MDPGrp052016.R.id.edit_text_out);
         mSendButton = (Button) dialogView.findViewById(com.example.android.MDPGrp052016.R.id.button_send);
 
+        config_btnsave = (Button) dialogView_config.findViewById(R.id.btnSave);
+        et_explore = (EditText) dialogView_config.findViewById(R.id.et_explore);
+        et_run = (EditText) dialogView_config.findViewById(R.id.et_run);
+        et_manual = (EditText) dialogView_config.findViewById(R.id.et_manual);
+        et_refresh = (EditText) dialogView_config.findViewById(R.id.et_refresh);
+        et_forward = (EditText) dialogView_config.findViewById(R.id.et_forward);
+        et_reverse = (EditText) dialogView_config.findViewById(R.id.et_reverse);
+        et_turn_left = (EditText) dialogView_config.findViewById(R.id.et_turnleft);
+        et_turn_right= (EditText) dialogView_config.findViewById(R.id.et_turnright);
+        et_f1 = (EditText) dialogView_config.findViewById(R.id.et_f1);
+        et_f2 = (EditText) dialogView_config.findViewById(R.id.et_f2);
+        et_xcoor = (EditText) dialogView_config.findViewById(R.id.et_xcoor);
+        et_ycoor = (EditText) dialogView_config.findViewById(R.id.et_ycoor);
+
+        ConfigRepo repo = new ConfigRepo(this);
+        Config config = repo.getconfigByname("explore");
+        et_explore.setText(config.binding);
+
+        config = repo.getconfigByname("run");
+        et_run.setText(config.binding);
+
+        config = repo.getconfigByname("manual");
+        et_manual.setText(config.binding);
+
+        config = repo.getconfigByname("refresh");
+        et_refresh.setText(config.binding);
+
+        config = repo.getconfigByname("forward");
+        et_forward.setText(config.binding);
+
+        config = repo.getconfigByname("reverse");
+        et_reverse.setText(config.binding);
+
+        config = repo.getconfigByname("turnleft");
+        et_turn_left.setText(config.binding);
+
+        config = repo.getconfigByname("turnright");
+        et_turn_right.setText(config.binding);
+
+        config = repo.getconfigByname("f1");
+        et_f1.setText(config.binding);
+
+        config = repo.getconfigByname("f2");
+        et_f2.setText(config.binding);
+
+        config = repo.getconfigByname("xcoor");
+        et_xcoor.setText(config.binding);
+
+        config = repo.getconfigByname("ycoor");
+        et_ycoor.setText(config.binding);
+
+        config_btnsave.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                    ConfigRepo repo = new ConfigRepo(getApplicationContext());
+                    Config[] config = new Config[12];
+
+                    config[0] = new Config();
+                    config[0].name = "explore";
+                    config[0].binding = et_explore.getText().toString();
+
+                    config[1] = new Config();
+                    config[1].name = "run";
+                    config[1].binding = et_run.getText().toString();
+
+                    config[2] = new Config();
+                    config[2].name = "manual";
+                    config[2].binding = et_manual.getText().toString();
+
+                    config[3] = new Config();
+                    config[3].name = "refresh";
+                    config[3].binding = et_refresh.getText().toString();
+
+                    config[4] = new Config();
+                    config[4].name = "forward";
+                    config[4].binding = et_forward.getText().toString();
+
+                    config[5] = new Config();
+                    config[5].name = "reverse";
+                    config[5].binding = et_reverse.getText().toString();
+
+                    config[6] = new Config();
+                    config[6].name = "turnleft";
+                    config[6].binding = et_turn_left.getText().toString();
+
+                    config[7] = new Config();
+                    config[7].name = "turnright";
+                    config[7].binding = et_turn_right.getText().toString();
+
+                    config[8] = new Config();
+                    config[8].name = "f1";
+                    config[8].binding = et_f1.getText().toString();
+
+                    config[9] = new Config();
+                    config[9].name = "f2";
+                    config[9].binding = et_f2.getText().toString();
+
+                    config[10] = new Config();
+                    config[10].name = "xcoor";
+                    config[10].binding = et_xcoor.getText().toString();
+
+                    config[11] = new Config();
+                    config[11].name = "ycoor";
+                    config[11].binding = et_ycoor.getText().toString();
+                for (int i = 0; i < config.length; i++) {
+                    if (repo.getconfigByname(config[i].name).name == null) {
+                        repo.insert(config[i]);
+                        } else {
+                        repo.update(config[i]);
+                    }
+                    }
+                Toast.makeText(getApplicationContext(), "Config saved", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
     @Override
@@ -215,26 +365,45 @@ public class MainActivity extends SampleActivityBase {
 
                 return true;
             case com.example.android.MDPGrp052016.R.id.config:
-                View dialogView_config;
-                Context context_config = this;
-                AlertDialog.Builder alertDialogBuilder_config = new AlertDialog.Builder(
-                        context_config);
-                inflater = this.getLayoutInflater();
-                dialogView_config = inflater.inflate(com.example.android.MDPGrp052016.R.layout.config, null);
-                // set title
-                alertDialogBuilder_config.setTitle("Config");
+                ConfigRepo repo = new ConfigRepo(this);
+                Config config = repo.getconfigByname("explore");
+                et_explore.setText(config.binding);
 
+                config = repo.getconfigByname("run");
+                et_run.setText(config.binding);
 
-                AlertDialog.Builder dialogBuilder_config = new AlertDialog.Builder(this);
-// ...Irrelevant code for customizing the buttons and title
+                config = repo.getconfigByname("manual");
+                et_manual.setText(config.binding);
 
-                dialogBuilder_config.setView(dialogView_config);
+                config = repo.getconfigByname("refresh");
+                et_refresh.setText(config.binding);
 
+                config = repo.getconfigByname("forward");
+                et_forward.setText(config.binding);
 
+                config = repo.getconfigByname("reverse");
+                et_reverse.setText(config.binding);
 
-                AlertDialog alertDialog_config = dialogBuilder_config.create();
+                config = repo.getconfigByname("turnleft");
+                et_turn_left.setText(config.binding);
+
+                config = repo.getconfigByname("turnright");
+                et_turn_right.setText(config.binding);
+
+                config = repo.getconfigByname("f1");
+                et_f1.setText(config.binding);
+
+                config = repo.getconfigByname("f2");
+                et_f2.setText(config.binding);
+
+                config = repo.getconfigByname("xcoor");
+                et_xcoor.setText(config.binding);
+
+                config = repo.getconfigByname("ycoor");
+                et_ycoor.setText(config.binding);
 
                 alertDialog_config.show();
+
                 return true;
             case com.example.android.MDPGrp052016.R.id.secure_connect_scan: {
                 // Launch the DeviceListActivity to see devices and do scan
@@ -475,7 +644,6 @@ public class MainActivity extends SampleActivityBase {
                     Log.d(TAG, "BT not enabled");
                     Toast.makeText(getApplicationContext(), com.example.android.MDPGrp052016.R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
-
                 }
         }
     }
