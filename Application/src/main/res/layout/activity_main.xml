@@ -20,16 +20,19 @@
       android:layout_height="match_parent"
       android:id="@+id/sample_main_layout">
 
-    <ViewAnimator
-          android:id="@+id/sample_output"
-          android:layout_width="match_parent"
-          android:layout_height="0px"
-          android:layout_weight="1">
 
-        <ScrollView
+        <RelativeLayout
               style="@style/Widget.SampleMessageTile"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="620px">
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/refresh_inactive"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
 
             <TextView
                   style="@style/Widget.SampleMessage"
@@ -39,27 +42,123 @@
                   android:paddingRight="@dimen/horizontal_page_margin"
                   android:paddingTop="@dimen/vertical_page_margin"
                   android:paddingBottom="@dimen/vertical_page_margin"
-                  android:text="@string/intro_message" />
-        </ScrollView>
+                  android:text="Reserved for map" />
+        </RelativeLayout>
 
-        <fragment
-              android:name="com.example.android.common.logger.LogFragment"
-              android:id="@+id/log_fragment"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
 
-    </ViewAnimator>
 
     <View
           android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="@android:color/darker_gray" />
 
-    <FrameLayout
+    <RelativeLayout
           android:id="@+id/sample_content_fragment"
           android:layout_weight="2"
           android:layout_width="match_parent"
-          android:layout_height="0px" />
+          android:layout_height="0px" >
+        <ImageButton
+            android:id="@+id/btn_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="130px"
+            android:layout_marginTop="30px"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/btn_up"/>
+
+        <ImageButton
+        android:id="@+id/btn_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30px"
+        android:layout_marginTop="130px"
+            android:background="@drawable/btn_left"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+      />
+
+        <ImageButton
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="225px"
+            android:layout_marginTop="130px"
+            android:background="@drawable/btn_right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:id="@+id/btn_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="130px"
+            android:layout_marginTop="230px"
+            android:background="@drawable/btn_down"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"/>
+        <ImageButton
+            android:id="@+id/btn_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:src="@drawable/explore"
+
+            android:background="?android:selectableItemBackground"
+            android:layout_below="@+id/btn_down" />
+        <ImageButton
+            android:id="@+id/btn_run"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:src="@drawable/run"
+            android:background="?android:selectableItemBackground"
+            android:layout_below="@+id/btn_down"
+            android:layout_toRightOf="@+id/btn_explore" />
+        <ImageButton
+            android:id="@+id/btn_manual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:src="@drawable/manual_selected"
+            android:layout_below="@+id/btn_down"
+
+            android:background="?android:selectableItemBackground"
+            android:layout_toRightOf="@+id/btn_run" />
+
+        <ImageButton
+            android:id="@+id/btn_f1"
+            android:layout_marginLeft="170px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_f1"
+
+            android:layout_toRightOf="@+id/btn_up" />
+        <ImageButton
+            android:id="@+id/btn_f2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_f2"
+
+            android:layout_toRightOf="@+id/btn_f1" />
+        <TextView
+            style="@style/Widget.SampleMessage"
+            android:id="@+id/tv_quickmsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/horizontal_page_margin"
+            android:paddingRight="@dimen/horizontal_page_margin"
+            android:paddingTop="@dimen/vertical_page_margin"
+            android:paddingBottom="@dimen/vertical_page_margin"
+            android:text="For quick message"
+            android:layout_toRightOf="@+id/btn_right"
+            android:layout_below="@id/btn_f2"
+            android:maxLines = "5"
+
+            android:scrollbars = "vertical"/>
+
+        </RelativeLayout>
+
 
 </LinearLayout>
 
