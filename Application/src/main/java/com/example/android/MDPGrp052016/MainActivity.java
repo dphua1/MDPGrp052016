@@ -22,9 +22,11 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +34,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +83,10 @@ public class MainActivity extends SampleActivityBase {
     EditText et_f2;
     EditText et_xcoor;
     EditText et_ycoor;
+
+    MenuItem refresh_settings;
+    ImageButton btn_refresh;
+    TextView quick_msg;
     /**
      * Name of the connected device
      */
@@ -189,7 +196,22 @@ public class MainActivity extends SampleActivityBase {
         et_xcoor = (EditText) dialogView_config.findViewById(R.id.et_xcoor);
         et_ycoor = (EditText) dialogView_config.findViewById(R.id.et_ycoor);
 
-        ConfigRepo repo = new ConfigRepo(this);
+        btn_refresh = (ImageButton) findViewById(R.id.btn_refresh);
+        btn_refresh.setEnabled(false);
+
+        final ImageButton btn_up = (ImageButton) findViewById(R.id.btn_up);
+        final ImageButton btn_down = (ImageButton) findViewById(R.id.btn_down);
+        final ImageButton btn_left = (ImageButton) findViewById(R.id.btn_left);
+        final ImageButton btn_right = (ImageButton) findViewById(R.id.btn_right);
+        final ImageButton btn_f1 = (ImageButton) findViewById(R.id.btn_f1);
+        final ImageButton btn_f2 = (ImageButton) findViewById(R.id.btn_f2);
+        final ImageButton btn_explore = (ImageButton) findViewById(R.id.btn_explore);
+        final ImageButton btn_run = (ImageButton) findViewById(R.id.btn_run);
+        final ImageButton btn_manual = (ImageButton) findViewById(R.id.btn_manual);
+
+        quick_msg = (TextView) findViewById(R.id.tv_quickmsg);
+        quick_msg.setMovementMethod(new ScrollingMovementMethod());
+        final ConfigRepo repo = new ConfigRepo(this);
         Config config = repo.getconfigByname("explore");
         et_explore.setText(config.binding);
 
@@ -229,68 +251,178 @@ public class MainActivity extends SampleActivityBase {
         config_btnsave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                    ConfigRepo repo = new ConfigRepo(getApplicationContext());
-                    Config[] config = new Config[12];
+                ConfigRepo repo = new ConfigRepo(getApplicationContext());
+                Config[] config = new Config[12];
 
-                    config[0] = new Config();
-                    config[0].name = "explore";
-                    config[0].binding = et_explore.getText().toString();
+                config[0] = new Config();
+                config[0].name = "explore";
+                config[0].binding = et_explore.getText().toString();
 
-                    config[1] = new Config();
-                    config[1].name = "run";
-                    config[1].binding = et_run.getText().toString();
+                config[1] = new Config();
+                config[1].name = "run";
+                config[1].binding = et_run.getText().toString();
 
-                    config[2] = new Config();
-                    config[2].name = "manual";
-                    config[2].binding = et_manual.getText().toString();
+                config[2] = new Config();
+                config[2].name = "manual";
+                config[2].binding = et_manual.getText().toString();
 
-                    config[3] = new Config();
-                    config[3].name = "refresh";
-                    config[3].binding = et_refresh.getText().toString();
+                config[3] = new Config();
+                config[3].name = "refresh";
+                config[3].binding = et_refresh.getText().toString();
 
-                    config[4] = new Config();
-                    config[4].name = "forward";
-                    config[4].binding = et_forward.getText().toString();
+                config[4] = new Config();
+                config[4].name = "forward";
+                config[4].binding = et_forward.getText().toString();
 
-                    config[5] = new Config();
-                    config[5].name = "reverse";
-                    config[5].binding = et_reverse.getText().toString();
+                config[5] = new Config();
+                config[5].name = "reverse";
+                config[5].binding = et_reverse.getText().toString();
 
-                    config[6] = new Config();
-                    config[6].name = "turnleft";
-                    config[6].binding = et_turn_left.getText().toString();
+                config[6] = new Config();
+                config[6].name = "turnleft";
+                config[6].binding = et_turn_left.getText().toString();
 
-                    config[7] = new Config();
-                    config[7].name = "turnright";
-                    config[7].binding = et_turn_right.getText().toString();
+                config[7] = new Config();
+                config[7].name = "turnright";
+                config[7].binding = et_turn_right.getText().toString();
 
-                    config[8] = new Config();
-                    config[8].name = "f1";
-                    config[8].binding = et_f1.getText().toString();
+                config[8] = new Config();
+                config[8].name = "f1";
+                config[8].binding = et_f1.getText().toString();
 
-                    config[9] = new Config();
-                    config[9].name = "f2";
-                    config[9].binding = et_f2.getText().toString();
+                config[9] = new Config();
+                config[9].name = "f2";
+                config[9].binding = et_f2.getText().toString();
 
-                    config[10] = new Config();
-                    config[10].name = "xcoor";
-                    config[10].binding = et_xcoor.getText().toString();
+                config[10] = new Config();
+                config[10].name = "xcoor";
+                config[10].binding = et_xcoor.getText().toString();
 
-                    config[11] = new Config();
-                    config[11].name = "ycoor";
-                    config[11].binding = et_ycoor.getText().toString();
+                config[11] = new Config();
+                config[11].name = "ycoor";
+                config[11].binding = et_ycoor.getText().toString();
                 for (int i = 0; i < config.length; i++) {
                     if (repo.getconfigByname(config[i].name).name == null) {
                         repo.insert(config[i]);
-                        } else {
+                    } else {
                         repo.update(config[i]);
                     }
-                    }
+                }
                 Toast.makeText(getApplicationContext(), "Config saved", Toast.LENGTH_SHORT).show();
 
             }
         });
 
+
+        btn_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("forward");
+                sendMessage(config.binding);
+
+            }
+        });
+
+        btn_down.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("reverse");
+                sendMessage(config.binding);
+            }
+        });
+
+        btn_left.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("turnleft");
+                sendMessage(config.binding);
+
+            }
+        });
+
+        btn_right.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("turnright");
+                sendMessage(config.binding);
+
+            }
+        });
+
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("refresh");
+                sendMessage(config.binding);
+
+            }
+        });
+        btn_f1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("f1");
+                sendMessage(config.binding);
+
+            }
+        });
+
+        btn_f2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("f2");
+                sendMessage(config.binding);
+
+            }
+        });
+
+        btn_explore.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("explore");
+                sendMessage(config.binding);
+                btn_up.setEnabled(false);
+                btn_up.setImageResource(R.drawable.up_inactive);
+                btn_down.setEnabled(false);
+                btn_down.setImageResource(R.drawable.down_inactive);
+                btn_left.setEnabled(false);
+                btn_left.setImageResource(R.drawable.left_inactive);
+                btn_right.setEnabled(false);
+                btn_right.setImageResource(R.drawable.right_inactive);
+                btn_explore.setImageResource(R.drawable.explore_selected);
+                btn_run.setImageResource(R.drawable.run);
+                btn_manual.setImageResource(R.drawable.manual);
+
+            }
+        });
+
+        btn_run.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("run");
+                sendMessage(config.binding);
+                btn_up.setEnabled(false);
+                btn_up.setImageResource(R.drawable.up_inactive);
+                btn_down.setEnabled(false);
+                btn_down.setImageResource(R.drawable.down_inactive);
+                btn_left.setEnabled(false);
+                btn_left.setImageResource(R.drawable.left_inactive);
+                btn_right.setEnabled(false);
+                btn_right.setImageResource(R.drawable.right_inactive);
+                btn_run.setImageResource(R.drawable.run_selected);
+                btn_manual.setImageResource(R.drawable.manual);
+                btn_explore.setImageResource(R.drawable.explore);
+
+            }
+        });
+
+        btn_manual.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Config config = repo.getconfigByname("manual");
+                sendMessage(config.binding);
+                btn_up.setEnabled(true);
+                btn_up.setImageResource(R.drawable.btn_up);
+                btn_down.setEnabled(true);
+                btn_down.setImageResource(R.drawable.btn_down);
+                btn_left.setEnabled(true);
+                btn_left.setImageResource(R.drawable.btn_left);
+                btn_right.setEnabled(true);
+                btn_right.setImageResource(R.drawable.btn_right);
+                btn_manual.setImageResource(R.drawable.manual_selected);
+                btn_explore.setImageResource(R.drawable.explore);
+                btn_run.setImageResource(R.drawable.run);
+            }
+        });
     }
     @Override
     public void onStart() {
@@ -334,30 +466,32 @@ public class MainActivity extends SampleActivityBase {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(com.example.android.MDPGrp052016.R.menu.main, menu);
         getMenuInflater().inflate(com.example.android.MDPGrp052016.R.menu.bluetooth_chat, menu);
+        refresh_settings = (MenuItem) menu.findItem(R.id.refresh_settings);
+
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem logToggle = menu.findItem(com.example.android.MDPGrp052016.R.id.menu_toggle_log);
-        logToggle.setVisible(findViewById(com.example.android.MDPGrp052016.R.id.sample_output) instanceof ViewAnimator);
-        logToggle.setTitle(mLogShown ? com.example.android.MDPGrp052016.R.string.sample_hide_log : com.example.android.MDPGrp052016.R.string.sample_show_log);
+        //MenuItem logToggle = menu.findItem(com.example.android.MDPGrp052016.R.id.menu_toggle_log);
+        //logToggle.setVisible(findViewById(com.example.android.MDPGrp052016.R.id.sample_output) instanceof ViewAnimator);
+        //logToggle.setTitle(mLogShown ? com.example.android.MDPGrp052016.R.string.sample_hide_log : com.example.android.MDPGrp052016.R.string.sample_show_log);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case com.example.android.MDPGrp052016.R.id.menu_toggle_log:
-                mLogShown = !mLogShown;
-                ViewAnimator output = (ViewAnimator) findViewById(com.example.android.MDPGrp052016.R.id.sample_output);
-                if (mLogShown) {
-                    output.setDisplayedChild(1);
-                } else {
-                    output.setDisplayedChild(0);
-                }
-                supportInvalidateOptionsMenu();
-                return true;
+            //case com.example.android.MDPGrp052016.R.id.menu_toggle_log:
+               // mLogShown = !mLogShown;
+               // ViewAnimator output = (ViewAnimator) findViewById(com.example.android.MDPGrp052016.R.id.sample_output);
+               // if (mLogShown) {
+               //     output.setDisplayedChild(1);
+               // } else {
+               //     output.setDisplayedChild(0);
+               // }
+               // supportInvalidateOptionsMenu();
+               // return true;
             case com.example.android.MDPGrp052016.R.id.view_chat:
 
 
@@ -422,30 +556,43 @@ public class MainActivity extends SampleActivityBase {
                 ensureDiscoverable();
                 return true;
             }
+            case R.id.refresh_settings: {
+                if (refresh_settings.getTitle().equals("Set Manual Refresh")) {
+                    refresh_settings.setTitle("Set Auto Refresh");
+                    btn_refresh.setEnabled(true);
+                    btn_refresh.setImageResource(R.drawable.btn_refresh);
+                } else {
+                    refresh_settings.setTitle("Set Manual Refresh");
+                    btn_refresh.setEnabled(false);
+                    btn_refresh.setImageResource(R.drawable.refresh_inactive);
+                }
+
+
+            }
 
         }
         return super.onOptionsItemSelected(item);
     }
 
     /** Create a chain of targets that will receive log data */
-    @Override
-    public void initializeLogging() {
+    //@Override
+    //public void initializeLogging() {
         // Wraps Android's native log framework.
-        LogWrapper logWrapper = new LogWrapper();
+       // LogWrapper logWrapper = new LogWrapper();
         // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
-        Log.setLogNode(logWrapper);
+        //Log.setLogNode(logWrapper);
 
         // Filter strips out everything except the message text.
-        MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
-        logWrapper.setNext(msgFilter);
+        //MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
+        //logWrapper.setNext(msgFilter);
 
         // On screen logging via a fragment with a TextView.
-        LogFragment logFragment = (LogFragment) getSupportFragmentManager()
-                .findFragmentById(com.example.android.MDPGrp052016.R.id.log_fragment);
-        msgFilter.setNext(logFragment.getLogView());
+        //LogFragment logFragment = (LogFragment) getSupportFragmentManager()
+               // .findFragmentById(com.example.android.MDPGrp052016.R.id.log_fragment);
+        //msgFilter.setNext(logFragment.getLogView());
 
-        Log.i(TAG, "Ready");
-    }
+        //Log.i(TAG, "Ready");
+    //}
     /**
      * Set up the UI and background operations for chat.
      */
