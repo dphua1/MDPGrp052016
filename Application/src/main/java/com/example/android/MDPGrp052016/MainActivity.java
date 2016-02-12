@@ -22,9 +22,14 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -49,8 +54,9 @@ import com.example.android.common.logger.Log;
 import com.example.android.common.logger.LogFragment;
 import com.example.android.common.logger.LogWrapper;
 import com.example.android.common.logger.MessageOnlyLogFilter;
-
-
+import android.view.MotionEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple launcher activity containing a summary sample description, sample log and a custom
@@ -59,13 +65,33 @@ import com.example.android.common.logger.MessageOnlyLogFilter;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class MainActivity extends SampleActivityBase {
+public class MainActivity extends SampleActivityBase implements SensorEventListener, View.OnTouchListener{
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
 
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private float deltaXMax = 0;
+
+    private float deltaYMax = 0;
+
+    private float deltaZMax = 0;
+
+    private float lastX, lastY, lastZ;
+
+
+    private float deltaX = 0;
+
+    private float deltaY = 0;
+
+    private float deltaZ = 0;
+
+
+    public Boolean sensorTrigger, phoneMotion;
     // Layout Views
     private ListView mConversationView;
     private EditText mOutEditText;
@@ -85,6 +111,7 @@ public class MainActivity extends SampleActivityBase {
     EditText et_ycoor;
 
     MenuItem refresh_settings;
+    MenuItem tilt_item;
     ImageButton btn_refresh;
     TextView quick_msg;
     /**
@@ -124,7 +151,7 @@ public class MainActivity extends SampleActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.android.MDPGrp052016.R.layout.activity_main);
-
+        sensorSetup();
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -467,7 +494,7 @@ public class MainActivity extends SampleActivityBase {
         getMenuInflater().inflate(com.example.android.MDPGrp052016.R.menu.main, menu);
         getMenuInflater().inflate(com.example.android.MDPGrp052016.R.menu.bluetooth_chat, menu);
         refresh_settings = (MenuItem) menu.findItem(R.id.refresh_settings);
-
+        tilt_item = (MenuItem) menu.findItem(R.id.tilt_mode);
         return true;
     }
 
@@ -566,7 +593,24 @@ public class MainActivity extends SampleActivityBase {
                     btn_refresh.setEnabled(false);
                     btn_refresh.setImageResource(R.drawable.refresh_inactive);
                 }
+                return true;
 
+            }
+            case R.id.tilt_mode: {
+                if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+                    Toast.makeText(getApplicationContext(), "You must be connected to a device to access tilt function.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (tilt_item.getTitle().equals("Enable Tilt Mode")) {
+                        phoneMotion = true;
+                        phoneMotion();
+                        tilt_item.setTitle("Disable Tilt Mode");
+                        Toast.makeText(getApplicationContext(), "Tilt Mode is on", Toast.LENGTH_SHORT).show();
+                    } else {
+                        phoneMotion = false;
+                        tilt_item.setTitle("Enable Tilt Mode");
+                        Toast.makeText(getApplicationContext(), "Tilt Mode is off", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
             }
 
@@ -810,5 +854,81 @@ public class MainActivity extends SampleActivityBase {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
         mChatService.connect(device, secure);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // TODO Auto-generated method stub
+
+        deltaX = lastX - event.values[0];
+
+        deltaY = lastY - event.values[1];
+
+        deltaZ = lastZ - event.values[2];
+        String text = "X: " + deltaX + "\nY: " + deltaY + "\nZ: " + deltaZ;
+        quick_msg.setText(text);
+    }
+
+
+    public void phoneMotion() {
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                newPhoneMotion();
+            }
+        }, 500);
+
+    }
+
+    public void newPhoneMotion() {
+        if (phoneMotion) {
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                        Looper.prepare();
+                        if (deltaX < -5 && deltaY > -7) {
+                            sendMessage("tl");
+                            //triggerLeft();
+                        } else if (deltaX > 5 && deltaY > -7) {
+                            sendMessage("tr");
+                            //triggerRight();
+                        } else if (deltaZ < -7.5) {
+                            sendMessage("f");
+                            //triggerUP();
+                        } else if (deltaZ > 4.5) {
+                            sendMessage("r");
+                            //triggerDown();
+                        }
+                        phoneMotion();
+
+                }
+            }, 500);
+        }
+
+    }
+
+    @Override
+    public boolean onTouch(View arg0, MotionEvent arg1) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void sensorSetup(){
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAccelerometer,
+                SensorManager.SENSOR_DELAY_GAME);
+
     }
 }
