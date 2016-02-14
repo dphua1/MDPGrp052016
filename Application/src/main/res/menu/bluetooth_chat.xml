@@ -21,5 +21,13 @@
         android:id="@+id/view_chat"
         android:showAsAction="never"
         android:title="Transmit/Receive text"/>
+    <item
+        android:id="@+id/refresh_settings"
+        android:showAsAction="never"
+        android:title="Set Manual Refresh"/>
+    <item
+        android:id="@+id/tilt_mode"
+        android:showAsAction="never"
+        android:title="Enable Tilt Mode"/>
 
 </menu>

@@ -19,9 +19,6 @@
         android:showAsAction="always"
         android:title="Configuration"/>
 
-    <item android:id="@+id/menu_toggle_log"
-          android:showAsAction="always"
-          android:title="@string/sample_show_log" />
     <item android:id="@+id/bluetooth"
         android:showAsAction="always"
         android:icon="@drawable/ic_action_device_access_bluetooth_searching"
